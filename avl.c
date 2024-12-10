@@ -253,7 +253,7 @@ void avl_imprimir_auxiliar(NO *raiz)
   if (raiz != NULL)
   {
     avl_imprimir_auxiliar(raiz->fesq);
-    printf("%d ", raiz->chave);
+    printf("%d, ", raiz->chave);
     avl_imprimir_auxiliar(raiz->fdir);
   }
   return;
