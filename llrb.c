@@ -166,7 +166,6 @@ no_t *apaga(no_t *raiz, int chave)
             raiz = propagaDireita(raiz);
             no_t *x = min(raiz->dir);
             raiz->info = x->info;
-            printf("\nO min que deu é: %d\n", raiz->info);
             raiz->dir = removeMin(raiz->dir);
         }
     }
@@ -283,7 +282,7 @@ void llrb_imprimir_aux(no_t *raiz)
     if (raiz != NULL)
     {
         llrb_imprimir_aux(raiz->esq);
-        printf("%d ", raiz->info);
+        printf("%d, ", raiz->info);
         llrb_imprimir_aux(raiz->dir);
     }
     return;
