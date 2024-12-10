@@ -1,29 +1,56 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "set.h"
+#include "conjunto.h"
 #include "avl.h"
-#include "lista.h"
 
 int main()
 {
 
-  int num;
-  SET *setA;
-  SET *setB;
+  int num, num2;
+  int qtd;
 
-  setA = set_criar(1);
-  setB = set_criar(1);
+  CONJUNTO *conjuntoA;
+  CONJUNTO *conjuntoB;
 
-  for (int i = 0; i < 5; i++)
+  conjuntoA = conjunto_criar(1);
+  conjuntoB = conjunto_criar(1);
+
+  printf("\nIndique a quantidade de elementos\n");
+  scanf("%d", &qtd);
+  printf("\nConjuntoA\n");
+  for (int i = 0; i < qtd; i++)
   {
     scanf("%d", &num);
-    set_inserir_elemento(setA, num);
+    conjunto_inserir_elemento(conjuntoA, num);
   }
 
-  set_pertence(setA, 6);
-  set_pertence(setA, 7);
-  set_pertence(setA, 1);
+  printf("\nConjuntoB\n");
+  for (int j = 0; j < qtd; j++)
+  {
+    scanf("%d", &num2);
+    conjunto_inserir_elemento(conjuntoB, num2);
+  }
 
-  set_imprimir(setA);
+  conjunto_pertence(conjuntoA, 6);
+  conjunto_pertence(conjuntoA, 59);
+  conjunto_pertence(conjuntoB, 24);
+  conjunto_pertence(conjuntoA, 150);
+  conjunto_pertence(conjuntoB, 3);
+
+  CONJUNTO *conjuntoC = conjunto_uniao(conjuntoA, conjuntoB);
+
+  printf("\nCONJUNTO A\n");
+  conjunto_imprimir(conjuntoA);
+
+  printf("\nCONJUNTO B\n");
+  conjunto_imprimir(conjuntoB);
+
+  printf("\nCONJUNTO C\n");
+  conjunto_imprimir(conjuntoC);
+
+  // Liberação de memória
+  conjunto_apagar(&conjuntoA);
+  conjunto_apagar(&conjuntoB);
+  conjunto_apagar(&conjuntoC);
   return 0;
 }

@@ -4,6 +4,7 @@
     "set.h": "c",
     "stdio.h": "c",
     "stdlib.h": "c",
-    "stdbool.h": "c"
+    "stdbool.h": "c",
+    "avl.h": "c"
   }
 }

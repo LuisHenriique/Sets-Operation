@@ -1,14 +1,14 @@
-all: main.o ArvB.o set.o 
-	gcc main.o ArvB.o set.o  -o main -std=c99 -Wall
+all: main.o avl.o conjunto.o 
+	gcc main.o avl.o conjunto.o  -o main -std=c99 -Wall
 
 main.o:
 	gcc -c main.c
 
-ArvB.o:
-	gcc -c ArvB.c
+avl.o:
+	gcc -c avl.c
 
-set.o:
-	gcc -c set.c 
+conjunto.o:
+	gcc -c conjunto.c 
 
 run:all
 	./main
