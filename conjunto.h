@@ -2,6 +2,7 @@
 #define CONJUNTO_H
 #include <stdbool.h>
 #include "avl.h"
+#include "llrb.h"
 #define AVL_TREE 1
 #define LLRBT 0
 

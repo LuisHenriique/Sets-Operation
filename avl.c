@@ -230,7 +230,7 @@ void avl_remover(AVL *T, int chave)
 {
   (T->raiz = avl_remover_no(&T->raiz, chave));
 }
-bool busca_no(NO *raiz, int chave)
+bool avl_busca_no(NO *raiz, int chave)
 {
   while (raiz != NULL)
   {
@@ -245,7 +245,7 @@ bool busca_no(NO *raiz, int chave)
 }
 bool avl_busca(AVL *T, int chave)
 {
-  return (busca_no(T->raiz, chave));
+  return (avl_busca_no(T->raiz, chave));
 }
 
 void avl_imprimir_auxiliar(NO *raiz)
@@ -280,18 +280,20 @@ void avl_transferir_elementos(AVL *T1, AVL *T2)
 }
 void avl_transferir_elementos_auxiliar(NO *raizA, NO **raizB) // Pega a árvore A e percorre em ordem e transfere para B inserindo
 {
-  if (raizA == NULL)
-    return;
+  if (raizA != NULL)
+  {
 
-  avl_transferir_elementos_auxiliar(raizA->fesq, raizB);
-  *raizB = avl_inserir_no((*raizB), raizA->chave); // insere os nos de uma arvora na outra
-  avl_transferir_elementos_auxiliar(raizA->fdir, raizB);
+    avl_transferir_elementos_auxiliar(raizA->fesq, raizB);
+    *raizB = avl_inserir_no((*raizB), raizA->chave); // insere os nos de uma arvora na outra
+    avl_transferir_elementos_auxiliar(raizA->fdir, raizB);
+  }
+  return;
 }
 
 void avl_interseccao_elementos(AVL *T1, AVL *T2, AVL *T3)
 {
-  if (T1 == NULL && T2 == NULL && T3 == NULL)
-    return;
+  if ((T1 == NULL || T2 == NULL) && T3 == NULL)
+    return; // Se qualquer um dos dois conjuntos (A ou B) for vazio, então a interseção é vazia
 
   avl_interseccao_elementos_auxiliar(T1->raiz, T2->raiz, &T3->raiz);
 }
@@ -299,10 +301,10 @@ void avl_interseccao_elementos(AVL *T1, AVL *T2, AVL *T3)
 void avl_interseccao_elementos_auxiliar(NO *raizA, NO *raizB, NO **raizC)
 {
   if (raizA == NULL || raizB == NULL)
-    return;
+    return; // Se qualquer uma for nula a interseção é vazia
 
   avl_interseccao_elementos_auxiliar(raizA->fesq, raizB, raizC);
-  if (busca_no(raizB, raizA->chave))
+  if (avl_busca_no(raizB, raizA->chave)) // 1.44 log n
     (*raizC) = avl_inserir_no((*raizC), raizA->chave);
   avl_interseccao_elementos_auxiliar(raizA->fdir, raizB, raizC);
 }

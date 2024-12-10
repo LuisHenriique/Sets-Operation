@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "conjunto.h"
-#include "avl.h"
 
 int main()
 {
@@ -52,6 +51,7 @@ int main()
 
     conjuntoUniao = conjunto_uniao(conjuntoA, conjuntoB);
     conjunto_imprimir(conjuntoUniao);
+    conjunto_apagar(&conjuntoUniao);
     break;
   }
   case 3:
@@ -59,6 +59,7 @@ int main()
     // intersecção
     conjuntoInterseccao = conjunto_interseccao(conjuntoA, conjuntoB);
     conjunto_imprimir(conjuntoInterseccao);
+    conjunto_apagar(&conjuntoInterseccao);
     break;
   }
   case 4:
@@ -73,7 +74,6 @@ int main()
   // Liberação de memória
   conjunto_apagar(&conjuntoA);
   conjunto_apagar(&conjuntoB);
-  // conjunto_apagar(&conjuntoUniao);
-  // conjunto_apagar(&conjuntoInterseccao);
+
   return 0;
 }
