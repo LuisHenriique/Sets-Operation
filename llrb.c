@@ -143,57 +143,56 @@ no_t *propagaDireita(no_t *no)
 }
 bool llrb_remover(LLRB *T, int data)
 {
-    return ((T->raiz = apaga(T->raiz, data)) != NULL);
+    T->raiz = apaga(T->raiz, data);
+    if (T->raiz != NULL)
+        return (true);
+    else
+        return (false);
 }
 no_t *apaga(no_t *raiz, int chave)
 {
     if (raiz == NULL)
-        return (NULL);
-    if (raiz->info == chave)
     {
-        if (raiz->info == chave)
-        {
-            if (raiz->esq == NULL || raiz->dir == NULL)
-            {
-                no_t *p = raiz;
-                raiz = (raiz->esq != NULL) ? raiz->esq : raiz->dir;
-                free(p);
-            }
-            else
-            {
-                // Substituição pelo menor da subárvore direita
-                no_t *x = min(raiz->dir);
-                raiz->info = x->info;             // Copia o valor do sucessor
-                raiz->dir = removeMin(raiz->dir); // Remove o nó substituído
-                raiz = restaura(raiz);            // Ajusta as propriedades rubro-negras
-            }
-        }
+        // O nó não existe na árvore
+        return NULL;
+    }
+
+    if (chave < raiz->info)
+    {
+        raiz = propagaEsquerda(raiz);
+        raiz->esq = apaga(raiz->esq, chave);
+    }
+    else if (chave > raiz->info)
+    {
+        raiz = propagaDireita(raiz);
+        raiz->dir = apaga(raiz->dir, chave);
     }
     else
     {
-        if (chave < raiz->info)
+        // Encontramos o nó a ser removido
+        if (raiz->esq == NULL || raiz->dir == NULL)
         {
-            raiz = propagaEsquerda(raiz);
-            raiz->esq = apaga(raiz->esq, chave);
+            // Caso em que o nó tem no máximo um filho
+            no_t *p = raiz;
+            raiz = (raiz->esq != NULL) ? raiz->esq : raiz->dir; // Substitui pelo filho não nulo
+            free(p);
         }
         else
         {
-            raiz = propagaDireita(raiz);
-            raiz->dir = apaga(raiz->dir, chave);
+            // Caso em que o nó tem dois filhos
+            // Substituir pelo menor valor da subárvore direita
+            no_t *x = min(raiz->dir);
+            raiz->info = x->info;             // Copia o valor do sucessor
+            raiz->dir = removeMin(raiz->dir); // Remove o nó substituído
+            raiz = restaura(raiz);            // Ajusta as propriedades rubro-negras
         }
     }
-    if (raiz != NULL)
-    {
-        if (Vermelho(raiz->dir) && !Vermelho(raiz->esq))
-            raiz = rotacaoEsquerda(raiz);
-        if (Vermelho(raiz->esq) && Vermelho(raiz->esq->esq))
-            raiz = rotacaoDireita(raiz);
-        if (Vermelho(raiz->esq) && Vermelho(raiz->dir))
-            inverte(raiz);
-    }
-    return (raiz);
-}
 
+    if (raiz != NULL)
+        raiz = restaura(raiz); // Restaura a árvore após a remoção
+
+    return raiz;
+}
 no_t *criarNo(int data)
 {
     no_t *novo = (no_t *)malloc(sizeof(no_t));

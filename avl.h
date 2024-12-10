@@ -11,7 +11,7 @@ typedef struct avl AVL;
 AVL *avl_criar(void);
 bool avl_inserir(AVL *T, int chave);
 void avl_apagar(AVL **T);
-void avl_remover(AVL *T, int chave);
+bool avl_remover(AVL *T, int chave);
 bool avl_busca(AVL *T, int chave);
 void avl_imprimir(AVL *T);
 bool avl_vazia(AVL *T);

@@ -278,9 +278,10 @@ NO *avl_remover_no(NO **raiz, int chave)
   }
   return *raiz;
 }
-void avl_remover(AVL *T, int chave)
+bool avl_remover(AVL *T, int chave)
 {
   (T->raiz = avl_remover_no(&T->raiz, chave));
+  return (T->raiz != NULL);
 }
 bool avl_busca_no(NO *raiz, int chave)
 {

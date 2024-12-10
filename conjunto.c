@@ -90,11 +90,9 @@ bool conjunto_remover_elemento(CONJUNTO *conjunto, int chave)
   if (conjunto != NULL)
   {
     if (conjunto->tipo == 1) // Analisa qual estrutura está sendo implementada
-      avl_remover(conjunto->avl_conjunto, chave);
+      return avl_remover(conjunto->avl_conjunto, chave);
     else
-      llrb_remover(conjunto->llrb_conjunto, chave);
-
-    return true;
+      return llrb_remover(conjunto->llrb_conjunto, chave);
   }
 
   return false;
