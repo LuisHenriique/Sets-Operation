@@ -30,62 +30,59 @@ CONJUNTO *conjunto_criar(int estrutura)
 }
 void conjunto_apagar(CONJUNTO **conjunto)
 {
-  if (conjunto == NULL && *conjunto == NULL)
+  if (*conjunto == NULL)
     return;
 
   if ((*conjunto)->tipo == 1)
-  {
     avl_apagar(&(*conjunto)->avl_conjunto);
-  }
+
   free(*conjunto);
   *conjunto = NULL;
 }
-void conjunto_remover_elemento(CONJUNTO *conjunto, int chave)
+bool conjunto_remover_elemento(CONJUNTO *conjunto, int chave)
 {
 
-  if (conjunto == NULL)
-    return;
+  if (conjunto != NULL)
+  {
 
-  avl_remover(conjunto->avl_conjunto, chave);
+    if (conjunto->tipo == 1)
+      avl_remover(conjunto->avl_conjunto, chave);
+    // elseinserir LLRBT //
+
+    return true;
+  }
+
+  return false;
 }
-void conjunto_inserir_elemento(CONJUNTO *conjunto, int chave)
+bool conjunto_inserir_elemento(CONJUNTO *conjunto, int chave)
 {
-  if (conjunto == NULL)
-    return;
-
-  if (conjunto->tipo == 1)
-    avl_inserir(conjunto->avl_conjunto, chave);
+  if (conjunto != NULL)
+  {
+    (conjunto->tipo == 1) ? avl_inserir(conjunto->avl_conjunto, chave) : printf("rubro aqui");
+    return true;
+  }
+  return false;
 }
 void conjunto_imprimir(CONJUNTO *conjunto)
 {
-  if (conjunto == NULL)
-    return;
+  if (conjunto != NULL)
+    (conjunto->tipo == 1) ? avl_imprimir(conjunto->avl_conjunto) : printf("rubro aqui"); // llrbt_imprimir();
 
-  if (conjunto->tipo == 1)
-    avl_imprimir(conjunto->avl_conjunto);
-  else
-  {
-    // LLRBT
-  }
+  return false;
 }
 
-void conjunto_pertence(CONJUNTO *conjunto, int chave)
+bool conjunto_pertence(CONJUNTO *conjunto, int chave)
 {
-  if (conjunto == NULL)
-    return;
+  if (conjunto != NULL)
+  {
 
-  if (conjunto->tipo == 1)
-  {
-    // avl
-    if (avl_busca(conjunto->avl_conjunto, chave))
-      printf("\nPertence\n");
+    if (conjunto->tipo == 1)
+      return (avl_busca(conjunto->avl_conjunto, chave)) ? true : false; // avl
     else
-      printf("\nNão pertence\n");
+      printf("rubro aqui");
   }
-  else
-  {
-    // LLRBT
-  }
+
+  return false;
 }
 
 CONJUNTO *conjunto_uniao(CONJUNTO *conjuntoA, CONJUNTO *conjuntoB)

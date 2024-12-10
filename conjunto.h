@@ -9,10 +9,10 @@ typedef struct conjunto CONJUNTO;
 
 CONJUNTO *conjunto_criar(int estrutura);
 void conjunto_apagar(CONJUNTO **conjunto);
-void conjunto_remover_elemento(CONJUNTO *conjunto, int chave);
-void conjunto_inserir_elemento(CONJUNTO *conjunto, int chave);
+bool conjunto_remover_elemento(CONJUNTO *conjunto, int chave);
+bool conjunto_inserir_elemento(CONJUNTO *conjunto, int chave);
 void conjunto_imprimir(CONJUNTO *conjuntO);
-void conjunto_pertence(CONJUNTO *conjunto, int chave);
+bool conjunto_pertence(CONJUNTO *conjunto, int chave);
 CONJUNTO *conjunto_uniao(CONJUNTO *conjuntoA, CONJUNTO *conjuntoB);
 CONJUNTO *conjunto_interseccao(CONJUNTO *conjuntoA, CONJUNTO *conjuntoB);
 
