@@ -235,6 +235,7 @@ no_t *removeMin(no_t *raiz) // Recebe a subárvore
         raiz = propagaEsquerda(raiz);
 
     raiz->esq = removeMin(raiz->esq);
+    raiz = restaura(raiz);
 
     if (Vermelho(raiz->dir))
         raiz = rotacaoEsquerda(raiz);
