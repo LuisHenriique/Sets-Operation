@@ -1,19 +1,25 @@
-#include "avl.h"
-typedef struct no NO;
+/* O programa a seguir implementa as operações da AVL */
 
-struct no
+/* Bibliotecas utilizadas */
+#include "avl.h" // Incluir o header da AVL
+
+/* Definição das estruturas */
+typedef struct no NO;
+struct no // Estrutura do nó da árvore
 {
-  int chave;
-  NO *fesq;
-  NO *fdir;
-  int altura;
+  int chave;  // Variável para armazenar o valor do elemento do nó (Nesse caso a chave é o valor)
+  NO *fesq;   // Ponteiro para o nó filho esquerdo do nó
+  NO *fdir;   // Ponteiro para o nó filho direito do nó
+  int altura; // Variável para armazenar a altura do nó
 };
+
 struct avl
-{
-  NO *raiz;
-  int profundidade;
+{                   // Estrutura da AVL
+  NO *raiz;         // Ponteiro para a raiz da árvore
+  int profundidade; // Armazena a profundidade da árvore
 };
-/*Protótipos*/
+
+/* Protótipos das funções auxiliares */
 NO *avl_balancear(NO *raiz);
 NO *rotacaoDir(NO *a);
 NO *rotacaoEsq(NO *a);
@@ -21,20 +27,28 @@ int fator_balanceamento(NO *raiz);
 void avl_transferir_elementos_auxiliar(NO *raizA, NO **raizB);
 void avl_interseccao_elementos_auxiliar(NO *raizA, NO *raizB, NO **raizC);
 
+/* A função a seguir cria a árvore */
 AVL *avl_criar(void)
 {
+  /*
+  A função aloca memória da estrutura AVL e associa essa memória
+  ao ponteiro T
 
-  AVL *T = (AVL *)malloc(sizeof(AVL));
+  Parâmetros: void
+  Returns: retorna o ponteiro para o espaço alocado
+  */
+  AVL *T = (AVL *)malloc(sizeof(AVL)); // Aloca memória para a árvore
   if (T != NULL)
-  {
+  { // Atualiza os valores
     T->profundidade = -1;
     T->raiz = NULL;
 
-    return T;
+    return T; // Retorna o ponteiro para a memória alocada
   }
   return NULL;
 }
 
+/* A função a seguir cria o nó da árvore*/
 NO *avl_cria_no(int chave)
 {
   NO *no = (NO *)malloc(sizeof(NO));
