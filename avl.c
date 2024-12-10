@@ -266,52 +266,65 @@ NO *avl_remover_no(NO **raiz, int chave)
   } // da subárvore esquerda
   /* Caso não tenha achado a chave, realiza-se a busca através de comparações */
   else if (chave < (*raiz)->chave)
-    (*raiz)->fesq = avl_remover_no(&(*raiz)->fesq, chave);
+    (*raiz)->fesq = avl_remover_no(&(*raiz)->fesq, chave); // Seja menor que a chave do nó atual
   else if (chave > (*raiz)->chave)
-    (*raiz)->fdir = avl_remover_no(&(*raiz)->fdir, chave);
+    (*raiz)->fdir = avl_remover_no(&(*raiz)->fdir, chave); // Caso seja maior que a chave do nó atual
 
   if (*raiz != NULL)
   {
+    /* Recalcula a altura do nó após as alterações */
     (*raiz)->altura = max(avl_altura_no((*raiz)->fesq), avl_altura_no((*raiz)->fdir)) + 1;
 
+    /* Rebalanceamento após a remoção */
     *raiz = avl_balancear(*raiz);
   }
   return *raiz;
 }
-bool avl_remover(AVL *T, int chave)
+
+/* A função a seguir remove um elemento da árvore */
+void avl_remover(AVL *T, int chave)
 {
   (T->raiz = avl_remover_no(&T->raiz, chave));
-  return (T->raiz != NULL);
 }
+
+/* A função a seguir é auxiliar da busca */
 bool avl_busca_no(NO *raiz, int chave)
 {
   while (raiz != NULL)
   {
-    if (chave < raiz->chave)
+    /* Através do while é possível repetir a análise para os filhos esquerdo e direito */
+    if (chave < raiz->chave) // Caso seja menor que a chave, realiza a atualização para a subárvore à esquerda
       raiz = raiz->fesq;
-    else if (chave > raiz->chave)
+    else if (chave > raiz->chave) // Caso seja maior que a chave, realiza a atualização para a subárvore à direita
       raiz = raiz->fdir;
     else
-      return true;
-  }
-  return false;
+      return true; // Caso tenha entrado no loop while, o nó não é nulo. Além disso, se passou
+  } // pelos casos em que é menor e maior, então é igual a chave (retorna true)
+  return false; // Caso tenha passado por todos os casos e não achou, então não está presente na árvore (retorna false)
 }
+
+/* A função a seguir implementa a busca de um elemento na árvore */
 bool avl_busca(AVL *T, int chave)
 {
   return (avl_busca_no(T->raiz, chave));
 }
 
+/* A função a seguir é reponsável por imprimir os elementos da árvore em ordem crescente */
 void avl_imprimir_auxiliar(NO *raiz)
 {
-  if (raiz != NULL)
+  if (raiz != NULL) // Verificação inicial
   {
-    avl_imprimir_auxiliar(raiz->fesq);
-    printf("%d, ", raiz->chave);
-    avl_imprimir_auxiliar(raiz->fdir);
+    /* A impressão em ordem crescente é realizada por meio do percurso em ordem
+    Onde a visita ao nó é a própria impressão
+    */
+    avl_imprimir_auxiliar(raiz->fesq); // Analisa a subárvore à esquerda
+    printf("%d ", raiz->chave);        // Visita em ordem (impressao do valor da chave)
+    avl_imprimir_auxiliar(raiz->fdir); // Analisa a subárvore à direita
   }
   return;
 }
 
+/* A função a seguir implementa a impressão através do parâmetro da árvore */
 void avl_imprimir(AVL *T)
 {
   if (T != NULL)
@@ -320,29 +333,53 @@ void avl_imprimir(AVL *T)
   }
   return;
 }
+
+/* A função a seguir verifica se a árvore está vazia */
 bool avl_vazia(AVL *T)
 {
-  return (T != NULL && T->raiz == NULL);
+  return (T != NULL && T->raiz == NULL); // Retorna true se for vazia e false se não for vazia
 }
 
+/* A função a seguir é importante para realizar a união entre dois conjuntos
+Utiliza-se a propriedade de que na inserção de um elemento em uma árvore que já possui esse elemento
+não haverá a inserção do elemento de forma repetida. Dessa forma, utiliza-se uma árvore
+T1 como referência.
+A partir disso, a árvore T1 é percorrida em ordem, onde para cada nó visitado é inserido
+na árvore T2.
+Com isso, tem-se que todos os elementos de T2 já estarão presentes e os elementos de T1 serão inseridos
+sem repetição. Ao final, os elementos de T1 que já estavam em T2 não serão inseridos, garantindo
+a união
+*/
 void avl_transferir_elementos(AVL *T1, AVL *T2)
 {
   if (T1 == NULL && T2 == NULL)
     return;
   avl_transferir_elementos_auxiliar(T1->raiz, &(T2)->raiz);
 }
+
+/* A função a seguir é auxiliar da avl_transferir_elementos, implementando de forma principal
+o percurso em ordem explicado na função anterior
+ */
 void avl_transferir_elementos_auxiliar(NO *raizA, NO **raizB) // Pega a árvore A e percorre em ordem e transfere para B inserindo
 {
   if (raizA != NULL)
   {
-
-    avl_transferir_elementos_auxiliar(raizA->fesq, raizB);
-    *raizB = avl_inserir_no((*raizB), raizA->chave); // insere os nos de uma arvora na outra
-    avl_transferir_elementos_auxiliar(raizA->fdir, raizB);
+    avl_transferir_elementos_auxiliar(raizA->fesq, raizB); // Realiza para a subárvore esquerda
+    *raizB = avl_inserir_no((*raizB), raizA->chave);       // Insere os nos de uma arvora na outra
+    avl_transferir_elementos_auxiliar(raizA->fdir, raizB); // Realiza para a subárvore direita
   }
   return;
 }
 
+/* A função a seguir é importante para a operacao de interseccao
+O funcionamento ocorre da seguinte forma: uma árvore é percorrida em ordem, onde cada nó é visitado.
+A visita consiste em uma verificação se esse elemento está presente em outra árvore. Dessa forma,
+a visita é representada por uma busca. Caso esse elemento esteja presente na outra árvore, ele será
+inserido na segunda árvore.
+
+A partir disso, apenas elementos que estão na árvore T1 e árvore T2 serão inseridos na árvore T3.
+Portanto, será realizado a intersecao dos elementos da arvore T1 e T2.
+*/
 void avl_interseccao_elementos(AVL *T1, AVL *T2, AVL *T3)
 {
   if ((T1 == NULL || T2 == NULL) && T3 == NULL)
@@ -351,13 +388,16 @@ void avl_interseccao_elementos(AVL *T1, AVL *T2, AVL *T3)
   avl_interseccao_elementos_auxiliar(T1->raiz, T2->raiz, &T3->raiz);
 }
 
+/* A função a seguir é auxiliar da avl_interseccao_elementos, implementado o percurso em ordem,
+onde a visita é uma verificação através de busca para inserir na terceira árvore (T3)
+*/
 void avl_interseccao_elementos_auxiliar(NO *raizA, NO *raizB, NO **raizC)
 {
   if (raizA == NULL || raizB == NULL)
-    return; // Se qualquer uma for nula a interseção é vazia
+    return; // Se qualquer uma das duas árvores for nula então a interseção é vazia
 
-  avl_interseccao_elementos_auxiliar(raizA->fesq, raizB, raizC);
-  if (avl_busca_no(raizB, raizA->chave)) // 1.44 log n
-    (*raizC) = avl_inserir_no((*raizC), raizA->chave);
-  avl_interseccao_elementos_auxiliar(raizA->fdir, raizB, raizC);
+  avl_interseccao_elementos_auxiliar(raizA->fesq, raizB, raizC); // Realiza para a subárvore esquerda
+  if (avl_busca_no(raizB, raizA->chave))                         // Verifica se o elemento da arvore A já esta em B
+    (*raizC) = avl_inserir_no((*raizC), raizA->chave);           // se já estiver (interseccao), então insere
+  avl_interseccao_elementos_auxiliar(raizA->fdir, raizB, raizC); // Realiza para a subárvore direita
 }
