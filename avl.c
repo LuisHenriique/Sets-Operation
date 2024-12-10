@@ -18,7 +18,8 @@ NO *avl_balancear(NO *raiz);
 NO *rotacaoDir(NO *a);
 NO *rotacaoEsq(NO *a);
 int fator_balanceamento(NO *raiz);
-void transferir_elementos_auxiliar(NO *raizA, NO **raizB);
+void avl_transferir_elementos_auxiliar(NO *raizA, NO **raizB);
+void avl_interseccao_elementos_auxiliar(NO *raizA, NO *raizB, NO **raizC);
 
 AVL *avl_criar(void)
 {
@@ -273,15 +274,36 @@ bool avl_vazia(AVL *T)
 
 void avl_transferir_elementos(AVL *T1, AVL *T2)
 {
-  if (T1 != NULL && T2 != NULL)
-    transferir_elementos_auxiliar(T1->raiz, &(T2)->raiz);
+  if (T1 == NULL && T2 == NULL)
+    return;
+  avl_transferir_elementos_auxiliar(T1->raiz, &(T2)->raiz);
+  avl_transferir_elementos_auxiliar(T1->raiz, &(T2)->raiz);
 }
-void transferir_elementos_auxiliar(NO *raizA, NO **raizB) // Pega a árvore A e percorre em ordem e transfere para B inserindo
+void avl_transferir_elementos_auxiliar(NO *raizA, NO **raizB) // Pega a árvore A e percorre em ordem e transfere para B inserindo
 {
   if (raizA == NULL)
     return;
 
-  transferir_elementos_auxiliar(raizA->fesq, raizB);
+  avl_transferir_elementos_auxiliar(raizA->fesq, raizB);
   *raizB = avl_inserir_no((*raizB), raizA->chave); // insere os nos de uma arvora na outra
-  transferir_elementos_auxiliar(raizA->fdir, raizB);
+  avl_transferir_elementos_auxiliar(raizA->fdir, raizB);
+}
+
+void avl_interseccao_elementos(AVL *T1, AVL *T2, AVL *T3)
+{
+  if (T1 == NULL && T2 == NULL && T3 == NULL)
+    return;
+
+  avl_interseccao_elementos_auxiliar(T1->raiz, T2->raiz, &T3->raiz);
+}
+
+void avl_interseccao_elementos_auxiliar(NO *raizA, NO *raizB, NO **raizC)
+{
+  if (raizA == NULL || raizB == NULL)
+    return;
+
+  avl_interseccao_elementos_auxiliar(raizA->fesq, raizB, raizC);
+  if (busca_no(raizB, raizA->chave))
+    (*raizC) = avl_inserir_no((*raizC), raizA->chave);
+  avl_interseccao_elementos_auxiliar(raizA->fdir, raizB, raizC);
 }

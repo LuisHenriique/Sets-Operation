@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include "conjunto.h"
 #include "avl.h"
-#define AVL_TREE 1
-#define LLRBT 0
 
 struct conjunto
 {
@@ -15,34 +13,32 @@ struct conjunto
 CONJUNTO *conjunto_criar(int estrutura)
 {
   CONJUNTO *conjunto = (CONJUNTO *)malloc(sizeof(CONJUNTO));
-  if (conjunto != NULL)
-  {
-    if (estrutura == 1)
-    {
-      conjunto->tipo = estrutura;
-      conjunto->avl_conjunto = avl_criar();
-    }
-    else
-    {
-      conjunto->tipo = estrutura;
-      // conjunto->lista_conjunto = lista_criar();
-    }
-    return conjunto;
-  }
+  if (conjunto == NULL)
+    return NULL;
 
-  return NULL;
+  if (estrutura == 1)
+  {
+    conjunto->tipo = estrutura;
+    conjunto->avl_conjunto = avl_criar();
+  }
+  else
+  {
+    conjunto->tipo = estrutura;
+    // conjunto->lista_conjunto = lista_criar();
+  }
+  return conjunto;
 }
 void conjunto_apagar(CONJUNTO **conjunto)
 {
-  if (conjunto != NULL && *conjunto != NULL)
+  if (conjunto == NULL && *conjunto == NULL)
+    return;
+
+  if ((*conjunto)->tipo == 1)
   {
-    if ((*conjunto)->tipo == 1)
-    {
-      avl_apagar(&(*conjunto)->avl_conjunto);
-    }
-    free(*conjunto);
-    *conjunto = NULL;
+    avl_apagar(&(*conjunto)->avl_conjunto);
   }
+  free(*conjunto);
+  *conjunto = NULL;
 }
 void conjunto_remover_elemento(CONJUNTO *conjunto, int chave)
 {
@@ -54,32 +50,41 @@ void conjunto_remover_elemento(CONJUNTO *conjunto, int chave)
 }
 void conjunto_inserir_elemento(CONJUNTO *conjunto, int chave)
 {
-  if (conjunto != NULL)
-  {
-    if (conjunto->tipo == 1)
-      avl_inserir(conjunto->avl_conjunto, chave);
-  }
+  if (conjunto == NULL)
+    return;
+
+  if (conjunto->tipo == 1)
+    avl_inserir(conjunto->avl_conjunto, chave);
 }
 void conjunto_imprimir(CONJUNTO *conjunto)
 {
-  if (conjunto != NULL)
+  if (conjunto == NULL)
+    return;
+
+  if (conjunto->tipo == 1)
+    avl_imprimir(conjunto->avl_conjunto);
+  else
   {
-    if (conjunto->tipo == 1)
-      avl_imprimir(conjunto->avl_conjunto);
+    // LLRBT
   }
 }
 
 void conjunto_pertence(CONJUNTO *conjunto, int chave)
 {
-  if (conjunto != NULL)
+  if (conjunto == NULL)
+    return;
+
+  if (conjunto->tipo == 1)
   {
-    if (conjunto->tipo == 1)
-    {
-      if (avl_busca(conjunto->avl_conjunto, chave))
-        printf("\nPertence\n");
-      else
-        printf("\nNão pertence\n");
-    }
+    // avl
+    if (avl_busca(conjunto->avl_conjunto, chave))
+      printf("\nPertence\n");
+    else
+      printf("\nNão pertence\n");
+  }
+  else
+  {
+    // LLRBT
   }
 }
 
@@ -105,4 +110,21 @@ CONJUNTO *conjunto_uniao(CONJUNTO *conjuntoA, CONJUNTO *conjuntoB)
 }
 CONJUNTO *conjunto_interseccao(CONJUNTO *conjuntoA, CONJUNTO *conjuntoB)
 {
+  if (conjuntoA == NULL || conjuntoB == NULL)
+    return NULL;
+
+  CONJUNTO *conjuntoC;
+
+  if (conjuntoA->tipo == 1 && conjuntoB->tipo == 1)
+  {
+    // avl
+    conjuntoC = conjunto_criar(1);
+    avl_interseccao_elementos(conjuntoA->avl_conjunto, conjuntoB->avl_conjunto, conjuntoC->avl_conjunto);
+  }
+  else
+  {
+    // LLRBT
+    conjuntoC = conjunto_criar(0);
+  }
+  return conjuntoC;
 }

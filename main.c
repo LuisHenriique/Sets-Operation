@@ -37,20 +37,23 @@ int main()
   conjunto_pertence(conjuntoA, 150);
   conjunto_pertence(conjuntoB, 3);
 
-  CONJUNTO *conjuntoC = conjunto_uniao(conjuntoA, conjuntoB);
-
+  CONJUNTO *conjuntoUniao = conjunto_uniao(conjuntoA, conjuntoB);
+  CONJUNTO *conjuntoInterseccao = conjunto_interseccao(conjuntoA, conjuntoB);
   printf("\nCONJUNTO A\n");
   conjunto_imprimir(conjuntoA);
 
   printf("\nCONJUNTO B\n");
   conjunto_imprimir(conjuntoB);
 
-  printf("\nCONJUNTO C\n");
-  conjunto_imprimir(conjuntoC);
+  printf("\nCONJUNTO UNIAO\n");
+  conjunto_imprimir(conjuntoUniao);
+  printf("\nCONJUNTO INTERSECCAO\n");
+  conjunto_imprimir(conjuntoInterseccao);
 
   // Liberação de memória
   conjunto_apagar(&conjuntoA);
   conjunto_apagar(&conjuntoB);
-  conjunto_apagar(&conjuntoC);
+  conjunto_apagar(&conjuntoUniao);
+  conjunto_apagar(&conjuntoInterseccao);
   return 0;
 }

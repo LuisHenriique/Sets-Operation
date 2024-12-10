@@ -10,10 +10,11 @@ typedef struct avl AVL;
 
 AVL *avl_criar(void);
 bool avl_inserir(AVL *T, int chave);
-void avl_imprimir(AVL *T);
 void avl_apagar(AVL **T);
 void avl_remover(AVL *T, int chave);
 bool avl_busca(AVL *T, int chave);
+void avl_imprimir(AVL *T);
 bool avl_vazia(AVL *T);
 void avl_transferir_elementos(AVL *T1, AVL *T2);
+void avl_interseccao_elementos(AVL *T1, AVL *T2, AVL *T3);
 #endif
