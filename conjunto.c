@@ -30,7 +30,7 @@ CONJUNTO *conjunto_criar(int estrutura)
 }
 void conjunto_apagar(CONJUNTO **conjunto)
 {
-  if (*conjunto == NULL)
+  if (conjunto == NULL && *conjunto == NULL)
     return;
 
   if ((*conjunto)->tipo == 1)
@@ -67,8 +67,6 @@ void conjunto_imprimir(CONJUNTO *conjunto)
 {
   if (conjunto != NULL)
     (conjunto->tipo == 1) ? avl_imprimir(conjunto->avl_conjunto) : printf("rubro aqui"); // llrbt_imprimir();
-
-  return false;
 }
 
 bool conjunto_pertence(CONJUNTO *conjunto, int chave)

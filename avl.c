@@ -277,7 +277,6 @@ void avl_transferir_elementos(AVL *T1, AVL *T2)
   if (T1 == NULL && T2 == NULL)
     return;
   avl_transferir_elementos_auxiliar(T1->raiz, &(T2)->raiz);
-  avl_transferir_elementos_auxiliar(T1->raiz, &(T2)->raiz);
 }
 void avl_transferir_elementos_auxiliar(NO *raizA, NO **raizB) // Pega a árvore A e percorre em ordem e transfere para B inserindo
 {
