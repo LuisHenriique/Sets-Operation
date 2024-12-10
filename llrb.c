@@ -1,5 +1,3 @@
-
-
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -153,22 +151,22 @@ no_t *apaga(no_t *raiz, int chave)
         return (NULL);
     if (raiz->info == chave)
     {
-        if (raiz->esq == NULL || raiz->dir == NULL)
+        if (raiz->info == chave)
         {
-            no_t *p = raiz;
-            if (raiz->esq == NULL)
-                raiz = raiz->dir;
+            if (raiz->esq == NULL || raiz->dir == NULL)
+            {
+                no_t *p = raiz;
+                raiz = (raiz->esq != NULL) ? raiz->esq : raiz->dir;
+                free(p);
+            }
             else
-                raiz = raiz->esq;
-            free(p);
-            p = NULL;
-        }
-        else
-        {
-            raiz = propagaDireita(raiz);
-            no_t *x = min(raiz->dir);
-            raiz->info = x->info;
-            raiz->dir = removeMin(raiz->dir);
+            {
+                // Substituição pelo menor da subárvore direita
+                no_t *x = min(raiz->dir);
+                raiz->info = x->info;             // Copia o valor do sucessor
+                raiz->dir = removeMin(raiz->dir); // Remove o nó substituído
+                raiz = restaura(raiz);            // Ajusta as propriedades rubro-negras
+            }
         }
     }
     else
@@ -194,12 +192,6 @@ no_t *apaga(no_t *raiz, int chave)
             inverte(raiz);
     }
     return (raiz);
-    /* Funções a verificar
-    min
-    removerMin
-    restaura
-
-    */
 }
 
 no_t *criarNo(int data)
