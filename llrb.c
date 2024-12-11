@@ -1,3 +1,4 @@
+/* Bibliotecas utilizadas */
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -7,17 +8,18 @@
 typedef struct no no_t;
 struct no
 {
-    no_t *esq;
-    no_t *dir;
-    int cor;
-    int info;
+    no_t *esq; // No esquerdo (representa a subarvore a esquerda)
+    no_t *dir; // No direito (representa a subarvore a direita)
+    int cor;   // Cor do nó (0 - preto; 1 - vermelho)
+    int info;  // Valor do elemento do nó
 };
 
 struct llrb_
 {
-    no_t *raiz;
+    no_t *raiz; // A estrutura para a árvore contem um nó para a raiz
 };
 typedef struct llrb_ LLRB;
+
 /* Protótipos das funções */
 void inverte(no_t *r);
 no_t *rotacaoDireita(no_t *c);
@@ -37,6 +39,7 @@ void llrb_imprimir_aux(no_t *raiz);
 void llrb_transferir_elementos_auxiliar(no_t *raizA, no_t **raizB);
 void llrb_interseccao_elementos_auxiliar(no_t *raizA, no_t *raizB, no_t **raizC);
 bool busca_no(no_t *raiz, int chave);
+
 /* Implementação das funções */
 
 /* A função a seguir implementa a criação da árvore */
@@ -51,6 +54,8 @@ LLRB *llrb_criar(void)
     return (NULL);
 }
 
+/* A função a seguir verifica se o nó é vermelho */
+/* Retorna 1 se for vermelho e 0 se não for vermelho */
 int Vermelho(no_t *no)
 {
     if (no == NULL)
@@ -58,6 +63,7 @@ int Vermelho(no_t *no)
     return (no->cor == 1);
 }
 
+/* A função a seguir auxilia no balanceamento */
 void inverte(no_t *no)
 {
     no->cor = !no->cor;
@@ -67,6 +73,7 @@ void inverte(no_t *no)
         no->dir->cor = !no->dir->cor;
 }
 
+/* A função a seguir auxilia no balanceamento através da rotação para direita */
 no_t *rotacaoDireita(no_t *c)
 {
     no_t *b = c->esq;
@@ -77,6 +84,7 @@ no_t *rotacaoDireita(no_t *c)
     return b;
 }
 
+/* A função a seguir auxilia no balanceamento através da rotação para esquerda */
 no_t *rotacaoEsquerda(no_t *a)
 {
     no_t *b = a->dir;
@@ -87,6 +95,7 @@ no_t *rotacaoEsquerda(no_t *a)
     return (b);
 }
 
+/* A função a seguir implementa a inserção do no na arvore */
 no_t *llrb_inserir_no(no_t *no, int data)
 {
     if (no == NULL)
@@ -96,6 +105,7 @@ no_t *llrb_inserir_no(no_t *no, int data)
     else if (data > no->info)
         no->dir = llrb_inserir_no(no->dir, data);
 
+    /* Apos inserir, realiza o rebalanceamento */
     if (Vermelho(no->dir) && !Vermelho(no->esq))
         no = rotacaoEsquerda(no);
     if (Vermelho(no->esq) && Vermelho(no->esq->esq))
@@ -106,11 +116,13 @@ no_t *llrb_inserir_no(no_t *no, int data)
     return no;
 }
 
+/* Função para inserir no na arvore */
 bool llrb_inserir(LLRB *T, int data)
 {
     return ((T->raiz = llrb_inserir_no(T->raiz, data)) != NULL);
 }
 
+/* Funcao auxiliar para rebalancear a arvore */
 no_t *propagaEsquerda(no_t *no)
 {
     if (!Vermelho(no->esq) && !Vermelho(no->esq->esq))
@@ -126,6 +138,7 @@ no_t *propagaEsquerda(no_t *no)
     return (no);
 }
 
+/* Funcao auxiliar para rebalancear a arvore */
 no_t *propagaDireita(no_t *no)
 {
     if (Vermelho(no->esq))
@@ -141,6 +154,8 @@ no_t *propagaDireita(no_t *no)
     }
     return (no);
 }
+
+/* Funcao para remover um nó da arvore */
 bool llrb_remover(LLRB *T, int data)
 {
     T->raiz = apaga(T->raiz, data);
@@ -149,6 +164,8 @@ bool llrb_remover(LLRB *T, int data)
     else
         return (false);
 }
+
+/* Funcao auxiliar para remover um nó da árvore a partir dos casos de remoção */
 no_t *apaga(no_t *raiz, int chave)
 {
     if (raiz == NULL)
@@ -193,6 +210,8 @@ no_t *apaga(no_t *raiz, int chave)
 
     return raiz;
 }
+
+/* Funcao auxiliar para criar nó com base em um valor */
 no_t *criarNo(int data)
 {
     no_t *novo = (no_t *)malloc(sizeof(no_t));
@@ -206,6 +225,7 @@ no_t *criarNo(int data)
     return novo;
 }
 
+/* Funcao que retorna o menor nó da árvore */
 no_t *min(no_t *raiz)
 {
     no_t *t = raiz;
@@ -217,6 +237,7 @@ no_t *min(no_t *raiz)
         return t;
 }
 
+/* Funcao para remover o menor nó que tem na árvore */
 no_t *removeMin(no_t *raiz) // Recebe a subárvore
 {
     if (raiz->esq == NULL)
@@ -234,6 +255,7 @@ no_t *removeMin(no_t *raiz) // Recebe a subárvore
     return (raiz);
 }
 
+/* Funcao para realizar o rebalanceamento */
 no_t *restaura(no_t *h) // Precisa analisar se ta dando certo
 {
     if (Vermelho(h->dir))
@@ -245,6 +267,7 @@ no_t *restaura(no_t *h) // Precisa analisar se ta dando certo
     return h;
 }
 
+/* Funcao para liberar a memória da árvore */
 void llrb_destruir(LLRB **T)
 {
     if (*T == NULL)
@@ -253,6 +276,7 @@ void llrb_destruir(LLRB **T)
         llrb_destruir_aux(&(*T)->raiz);
 }
 
+/* Funcao auxiliar para liberar a memória da árvore */
 void llrb_destruir_aux(no_t **raiz)
 {
     if ((*raiz) == NULL)
@@ -263,6 +287,7 @@ void llrb_destruir_aux(no_t **raiz)
     *raiz = NULL;
 }
 
+/* Funcao para imprimir os elementos da árvore */
 void llrb_imprimir(LLRB *T)
 {
     if (T != NULL)
@@ -271,6 +296,7 @@ void llrb_imprimir(LLRB *T)
     return;
 }
 
+/* Funcao auxiliar para imprimir os elementos da árvore */
 void llrb_imprimir_aux(no_t *raiz)
 {
     if (raiz != NULL)
@@ -282,6 +308,10 @@ void llrb_imprimir_aux(no_t *raiz)
     return;
 }
 
+/* Funcao que auxilia a uniao de duas árvores */
+/* O funcionamento da função se baseia no fato de que as inserções em árvore
+não acontecem com elementos repetidos
+*/
 void llrb_transferir_elementos(LLRB *T1, LLRB *T2)
 {
     if (T1 == NULL && T2 == NULL)
@@ -299,6 +329,7 @@ void llrb_transferir_elementos_auxiliar(no_t *raizA, no_t **raizB) // Pega a ár
     return;
 }
 
+/* A funcao a seguir implementa a intersecção entre duas árvores */
 void llrb_interseccao_elementos(LLRB *T1, LLRB *T2, LLRB *T3)
 {
     if ((T1 == NULL || T2 == NULL) && T3 == NULL)
@@ -307,6 +338,7 @@ void llrb_interseccao_elementos(LLRB *T1, LLRB *T2, LLRB *T3)
     llrb_interseccao_elementos_auxiliar(T1->raiz, T2->raiz, &T3->raiz);
 }
 
+/* A funcao a seguir implementa a intersecção auxiliar entre duas árvores */
 void llrb_interseccao_elementos_auxiliar(no_t *raizA, no_t *raizB, no_t **raizC)
 {
     if (raizA == NULL || raizB == NULL)
@@ -318,6 +350,7 @@ void llrb_interseccao_elementos_auxiliar(no_t *raizA, no_t *raizB, no_t **raizC)
     llrb_interseccao_elementos_auxiliar(raizA->dir, raizB, raizC);
 }
 
+/* Funcao que implementa a busca de um elemento na árvore */
 bool busca_no(no_t *raiz, int chave)
 {
     while (raiz != NULL)
@@ -331,6 +364,8 @@ bool busca_no(no_t *raiz, int chave)
     }
     return false;
 }
+
+/* Funcao para a busca de um elemento na árvore*/
 bool llrb_busca(LLRB *T, int chave)
 {
     return (busca_no(T->raiz, chave));
